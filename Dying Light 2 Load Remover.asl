@@ -27,12 +27,13 @@ start
 isLoading 
 {
 	bool isIngame = current.menuCutsStart == 32 || current.menuCutsStart == 28;
-	bool isInEscMenu = current.Paused == 1 && current.Paused2 == 1 && current.Paused3 == 2 && current.Options2 == 2;
-	bool isInOptions = current.Paused2 == 1 && current.Options1 == 1 && current.Options2 == 3;
-	bool isInPlayerMenu = current.Options2 == 4 || current.Options2 == 3 || current.Options2 == 2;
+	bool isProbablyPaused = current.Paused == 1 || current.Paused2 == 1 || current.Paused3 == 2 || current.Paused3 == 1;
+	// When game prompts an unskippable hint, that forces you to open skills/inventory/map, these flags have exact these values
+	bool isForcedToOpenMenu = current.Paused == 1 && current.Paused2 == 0 && current.Paused3 == 2;
+	bool isInOptions = current.Paused2 == 1 && current.Options == 1 && current.Options2 == 3;
 	bool isOnBlackscreen = current.blackscreenNew != 158;
 
-	return current.Loading == 2 || !isIngame || isInEscMenu || isInOptions || isInPlayerMenu || isOnBlackscreen;
+	return current.Loading == 2 || !isIngame || (isProbablyPaused && !isForcedToOpenMenu) || isInOptions || isOnBlackscreen;
 }
 
 reset
