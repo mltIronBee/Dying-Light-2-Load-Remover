@@ -9,9 +9,13 @@ state("DyingLightGame_x64_rwdi")
 	byte blackScreen: "AnimDriver_x64_rwdi.dll", 0x152F38, 0xA88, 0x20, 0x28, 0xE80;
 	byte blackscreenNew: "engine_x64_rwdi.dll", 0x23A6DF0, 0x0, 0x1C8, 0x4;
 	byte Loading: "engine_x64_rwdi.dll", 0x1FCBB88, 0x1200, 0x8, 0x0, 0x8;
-	byte onlineState: "engine_x64_rwdi.dll", 0x2BE1988, 0x38, 0x30, 0x20, 0x68, 0x40;
-	byte Paused: "engine_x64_rwdi.dll", 0x21E3A80, 0x8A0;
-	byte Inv: "engine_x64_rwdi.dll", 0x1FBCA70, 0xC6F;
+	// not needed?
+	// byte onlineState: "engine_x64_rwdi.dll", 0x220D818, 0x30, 0x20, 0x68, 0x40;
+	byte Paused: "engine_x64_rwdi.dll", 0x220C790, 0x2F0, 0x20;
+	byte Paused2: "engine_x64_rwdi.dll", 0x23A6FF8, 0x78, 0x60;
+	byte Paused3: "engine_x64_rwdi.dll", 0x220C790, 0x2F0, 0x1D;
+	byte Options: "engine_x64_rwdi.dll", 0x21E3A80, 0x1E8, 0x6C0, 0x88, 0x78;
+	byte Options2: "engine_x64_rwdi.dll", 0x21E3A80, 0x1E8, 0x6C0, 0x88, 0x58;
 } 
 
 start 
@@ -21,8 +25,14 @@ start
 }
 
 isLoading 
-{ 
-	return current.Loading == 2 || current.menuCutsStart == 200 || current.Inv != 63 && current.Paused == 1 && current.onlineState == 0 || current.blackscreenNew != 158;
+{
+	bool isIngame = current.menuCutsStart == 32 || current.menuCutsStart == 28;
+	bool isInEscMenu = current.Paused == 1 && current.Paused2 == 1 && current.Paused3 == 2 && current.Options2 == 2;
+	bool isInOptions = current.Paused2 == 1 && current.Options1 == 1 && current.Options2 == 3;
+	bool isInPlayerMenu = current.Options2 == 4 || current.Options2 == 3 || current.Options2 == 2;
+	bool isOnBlackscreen = current.blackscreenNew != 158;
+
+	return current.Loading == 2 || !isIngame || isInEscMenu || isInOptions || isInPlayerMenu || isOnBlackscreen;
 }
 
 reset
